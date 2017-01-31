@@ -13,7 +13,7 @@ class LinkedList {
 
         if (this.length !== 0) {
             this._tail.next = newNode;
-            newNode.prev=this._tail;
+            newNode.prev = this._tail;
             this._tail = newNode;
         }
         else  {
@@ -23,15 +23,20 @@ class LinkedList {
         }
 
         this.length++;
-        return newNode;
+        return this;
     }
 
     head() {
+        if (!this._head) {
+            return null;
+        }
         return this._head.data;
-
     }
 
     tail() {
+        if (!this._tail) {
+            return null;
+        }
         return this._tail.data;
     }
 
@@ -49,9 +54,14 @@ class LinkedList {
 
     insertAt(index, data) {
         var currentNode = this.getNodeByIndex(index);
-        currentNode.data=data;
-        return currentNode.data;
-
+        if (currentNode) {
+            currentNode.data = data;
+        }
+        else {
+            var newNode= new Node();
+            newNode.data = data;
+        }
+        return this;
     }
 
     isEmpty() {
@@ -64,17 +74,57 @@ class LinkedList {
     }
 
     clear() {
+        this.length = 0;
+        this._head = null;
+        this._tail = null;
+        return this;
 
     }
 
-    deleteAt(index) {}
+    deleteAt(index) {
+        var currentNode = this.getNodeByIndex(index);
+        if (currentNode) {
+            var prevNode = currentNode.prev;
+            if (prevNode) {
+                var nextNode = currentNode.next;
+                prevNode.next = nextNode;
+                if (nextNode) {
+                    nextNode.prev = prevNode;
+                }
+            }
+        }
+        return this
 
     reverse() {
+        var node_buf = {
+            data: null,
+            next: null,
+            prev: null
+        }
 
+        var node_head = this._head;
+        var node_tail = this._tail;
 
+        for  (var i=0; i < this.length / 2; i++) {
+            node_buf.data = node_tail.data;
+            node_tail.data = node_head.data;
+            node_head.data = node_buf.data;
+            node_head = node_head.next;
+            node_tail = node_tail.prev;
+        }
+        return this;
     }
 
-    indexOf(data) {}
+    indexOf(data) {
+        var currentNode = this._head;
+        for  (var i = 0; i < this.length; i++) {
+            if (currentNode.data == data) {
+                return i;
+            }
+            currentNode = currentNode.next;
+        }
+        return -1;
+    }
 }
 
 module.exports = LinkedList;
