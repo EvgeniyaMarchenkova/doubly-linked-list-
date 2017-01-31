@@ -93,7 +93,8 @@ class LinkedList {
                 }
             }
         }
-        return this
+        return this;
+    }
 
     reverse() {
         var node_buf = {
